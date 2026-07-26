@@ -1,1 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YUKI & YUKIKO WEDDING QUIZ</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        sans-serif;
+
+      background: #f7f3ec;
+      color: #4a443c;
+
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+
+      padding: 50px 28px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+    }
+
+    .small-title {
+      font-family: Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: #9b8062;
+
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      letter-spacing: 2px;
+      color: #735f49;
+
+      margin-bottom: 38px;
+    }
+
+    .line {
+      width: 45px;
+      height: 1px;
+      background: #bca98f;
+
+      margin-bottom: 38px;
+    }
+
+    .guest-name {
+      font-family: Georgia, "Yu Mincho", serif;
+      font-size: 27px;
+      font-weight: normal;
+      letter-spacing: 2px;
+
+      margin-bottom: 28px;
+
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 1s ease;
+    }
+
+    .guest-name.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .welcome {
+      font-size: 15px;
+      line-height: 2;
+      letter-spacing: 1px;
+
+      margin-bottom: 24px;
+    }
+
+    .quiz-text {
+      font-size: 14px;
+      line-height: 2;
+      color: #777066;
+
+      margin-bottom: 45px;
+    }
+
+    .start-button {
+      width: 220px;
+      padding: 17px;
+
+      border: none;
+      border-radius: 50px;
+
+      background: #b78d75;
+      color: white;
+
+      font-family: Georgia, serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+
+      cursor: pointer;
+
+      transition: all 0.3s ease;
+    }
+
+    .start-button:hover {
+      opacity: 0.8;
+      transform: translateY(-2px);
+    }
+
+    .loading {
+      font-size: 14px;
+      color: #999;
+      letter-spacing: 1px;
+    }
+
+    .error {
+      font-size: 14px;
+      line-height: 2;
+      color: #8b6464;
+    }
+
+    #main {
+      display: none;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 25px;
+
+      font-family: Georgia, serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #aaa096;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- 読み込み中 -->
+    <div id="loading" class="loading">
+      Loading...
+    </div>
+
+    <!-- エラー -->
+    <div id="error" class="error" style="display:none;">
+    </div>
+
+    <!-- メイン画面 -->
+    <div id="main">
+
+      <div class="small-title">
+        YUKI & YUKIKO
+      </div>
+
+      <div class="title">
+        WEDDING QUIZ
+      </div>
+
+      <div class="line"></div>
+
+      <div id="guestName" class="guest-name">
+      </div>
+
+      <div class="welcome">
+        今日は来てくれて<br>
+        ありがとうございます
+      </div>
+
+      <div class="quiz-text">
+        ふたりにまつわる<br>
+        クイズに挑戦！
+      </div>
+
+      <button class="start-button" onclick="startQuiz()">
+        START
+      </button>
+
+    </div>
+
+    <div class="footer">
+      2026.08.09
+    </div>
+
+  </div>
+
+  <script>
+
+    // ==============================
+    // Google Apps Script
+    // ==============================
+
+    const GAS_URL =
+      "https://script.google.com/macros/s/AKfycbxrA-Wr9HPMuesssOCNxYN-PkvYZ-7g41MmFXZbKQvAJ69PU2VmlYfLq05WDmpDZoR5sA/exec";
+
+
+    // ==============================
+    // URLからゲストID取得
+    // ==============================
+
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const guestId = params.get("id");
+
+
+    // ==============================
+    // ゲスト情報取得
+    // ==============================
+
+    async function loadGuest() {
+
+      if (!guestId) {
+
+        showError(
+          "ゲスト情報を確認できませんでした。<br><br>" +
+          "エスコートカードのQRコードから<br>" +
+          "もう一度アクセスしてください。"
+        );
+
+        return;
+      }
+
+
+      try {
+
+        const response = await fetch(
+          GAS_URL + "?id=" + encodeURIComponent(guestId)
+        );
+
+        const data = await response.json();
+
+
+        if (!data.success) {
+
+          showError(
+            "ゲスト情報を確認できませんでした。<br><br>" +
+            "QRコードからもう一度アクセスしてください。"
+          );
+
+          return;
+        }
+
+
+        // 名前表示
+        const guestName =
+          document.getElementById("guestName");
+
+        guestName.textContent =
+          data.name + " さん";
+
+
+        // Loadingを消す
+        document.getElementById("loading")
+          .style.display = "none";
+
+
+        // メイン画面表示
+        document.getElementById("main")
+          .style.display = "block";
+
+
+        // 少し遅れて名前をフェードイン
+        setTimeout(() => {
+
+          guestName.classList.add("show");
+
+        }, 300);
+
+
+        // 後で使うため保存
+        sessionStorage.setItem(
+          "guestId",
+          data.id
+        );
+
+        sessionStorage.setItem(
+          "guestName",
+          data.name
+        );
+
+        sessionStorage.setItem(
+          "guestMessage",
+          data.message
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showError(
+          "読み込み中にエラーが発生しました。<br><br>" +
+          "通信環境をご確認のうえ、<br>" +
+          "もう一度お試しください。"
+        );
+      }
+    }
+
+
+    // ==============================
+    // エラー表示
+    // ==============================
+
+    function showError(message) {
+
+      document.getElementById("loading")
+        .style.display = "none";
+
+      const error =
+        document.getElementById("error");
+
+      error.innerHTML = message;
+
+      error.style.display = "block";
+    }
+
+
+    // ==============================
+    // START
+    // ==============================
+
+    function startQuiz() {
+
+      /*
+        クイズが確定したら
+        ここからクイズ画面へ進ませます。
+      */
+
+      alert(
+        "クイズ画面は次の工程で作ります！"
+      );
+    }
+
+
+    // 起動
+    loadGuest();
+
+  </script>
+
+</body>
+</html>
