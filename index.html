@@ -1,574 +1,1610 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUKI & YUKIKO WEDDING QUIZ</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
 
-    body {
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        sans-serif;
-      background: #f7f3ec;
-      color: #4a443c;
-      min-height: 100vh;
-    }
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-    .container {
-      width: 100%;
-      max-width: 430px;
-      min-height: 100vh;
-      margin: 0 auto;
-      padding: 40px 24px 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-    }
+<title>YUKI & YUKIKO WEDDING QUIZ</title>
 
-    .screen {
-      width: 100%;
-      display: none;
-    }
 
-    .screen.active {
-      display: block;
-    }
+<style>
 
-    .small-title {
-      font-family: Georgia, serif;
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: #9b8062;
-      margin-bottom: 10px;
-    }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    .title {
-      font-family: Georgia, serif;
-      font-size: 27px;
-      letter-spacing: 2px;
-      color: #735f49;
-      margin-bottom: 36px;
-    }
+html,
+body {
+  min-height: 100%;
+}
 
-    .line {
-      width: 45px;
-      height: 1px;
-      background: #bca98f;
-      margin: 0 auto 35px;
-    }
+body {
 
-    .guest-name {
-      font-family: "Yu Mincho", Georgia, serif;
-      font-size: 26px;
-      letter-spacing: 2px;
-      margin-bottom: 28px;
-    }
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    sans-serif;
 
-    .welcome {
-      font-size: 15px;
-      line-height: 2;
-      margin-bottom: 22px;
-    }
+  background: #f7f3ec;
 
-    .sub-text {
-      font-size: 14px;
-      line-height: 2;
-      color: #777066;
-      margin-bottom: 38px;
-    }
+  color: #4a443c;
+}
 
-    button {
-      font-family: inherit;
-    }
 
-    .main-button {
-      width: 220px;
-      padding: 17px;
-      border: none;
-      border-radius: 50px;
-      background: #b78d75;
-      color: #fff;
-      font-family: Georgia, serif;
-      font-size: 14px;
-      letter-spacing: 3px;
-      cursor: pointer;
-    }
+/* =========================
+   全体
+========================= */
 
-    .question-number {
-      font-family: Georgia, serif;
-      letter-spacing: 2px;
-      font-size: 13px;
-      color: #9b8062;
-      margin-bottom: 10px;
-    }
+.container {
 
-    .progress {
-      height: 4px;
-      width: 100%;
-      background: #e3ddd4;
-      border-radius: 10px;
-      margin-bottom: 35px;
-      overflow: hidden;
-    }
+  width: 100%;
+  max-width: 430px;
 
-    .progress-bar {
-      height: 100%;
-      width: 20%;
-      background: #b78d75;
-      transition: width 0.4s ease;
-    }
+  min-height: 100vh;
 
-    .question {
-      font-size: 20px;
-      line-height: 1.7;
-      font-weight: 600;
-      margin-bottom: 30px;
-    }
+  margin: 0 auto;
 
-    .choices {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+  padding:
+    45px
+    24px
+    80px;
 
-    .choice-button {
-      width: 100%;
-      padding: 16px 18px;
-      border: 1px solid #d8cec1;
-      background: rgba(255,255,255,0.55);
-      border-radius: 14px;
-      font-size: 15px;
-      color: #4a443c;
-      cursor: pointer;
-      text-align: left;
-      line-height: 1.5;
-    }
+  display: flex;
 
-    .choice-button:active {
-      transform: scale(0.98);
-    }
+  align-items: center;
+  justify-content: center;
 
-    .score {
-      font-family: Georgia, serif;
-      font-size: 46px;
-      color: #735f49;
-      margin: 20px 0 25px;
-    }
+  position: relative;
 
-    .fade-text {
-      opacity: 0;
-      transform: translateY(15px);
-      transition: opacity 2.5s ease, transform 2.5s ease;
-    }
+  text-align: center;
+}
 
-    .fade-text.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
 
-    .final-intro {
-      font-family: "Yu Mincho", serif;
-      font-size: 22px;
-      line-height: 2;
-      letter-spacing: 2px;
-    }
+.screen {
 
-    .message-name {
-      font-family: "Yu Mincho", serif;
-      font-size: 26px;
-      margin-bottom: 30px;
-      letter-spacing: 2px;
-    }
+  width: 100%;
 
-    .personal-message {
-      font-family: "Yu Mincho", serif;
-      font-size: 16px;
-      line-height: 2.3;
-      white-space: pre-wrap;
-      text-align: left;
-      padding: 0 8px;
-    }
+  display: none;
+}
 
-    .signature {
-      font-family: Georgia, serif;
-      margin-top: 35px;
-      letter-spacing: 2px;
-      font-size: 13px;
-      color: #8c8174;
-    }
 
-    .loading,
-    .error {
-      font-size: 14px;
-      line-height: 2;
-      color: #777;
-    }
+.screen.active {
 
-    .footer {
-      position: absolute;
-      bottom: 24px;
-      font-family: Georgia, serif;
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: #aaa096;
-      left: 0;
-      right: 0;
-    }
-  </style>
+  display: block;
+}
+
+
+/* =========================
+   タイトル
+========================= */
+
+.small-title {
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 13px;
+
+  letter-spacing: 3px;
+
+  color: #9b8062;
+
+  margin-bottom: 10px;
+}
+
+
+.title {
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 27px;
+
+  letter-spacing: 2px;
+
+  color: #735f49;
+
+  margin-bottom: 35px;
+}
+
+
+.line {
+
+  width: 45px;
+
+  height: 1px;
+
+  background: #bca98f;
+
+  margin:
+    0 auto
+    35px;
+}
+
+
+/* =========================
+   名前
+========================= */
+
+.guest-name {
+
+  font-family:
+    "Yu Mincho",
+    "Hiragino Mincho ProN",
+    serif;
+
+  font-size: 25px;
+
+  font-weight: normal;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 28px;
+}
+
+
+/* =========================
+   Welcome
+========================= */
+
+.welcome {
+
+  font-size: 15px;
+
+  line-height: 2;
+
+  letter-spacing: 1px;
+
+  margin-bottom: 22px;
+}
+
+
+.sub-text {
+
+  font-size: 14px;
+
+  line-height: 2;
+
+  letter-spacing: 1px;
+
+  color: #777066;
+
+  margin-bottom: 40px;
+}
+
+
+/* =========================
+   メインボタン
+========================= */
+
+.main-button {
+
+  width: 220px;
+
+  padding: 17px;
+
+  border: none;
+
+  border-radius: 50px;
+
+  background: #b78d75;
+
+  color: white;
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 14px;
+
+  letter-spacing: 3px;
+
+  cursor: pointer;
+}
+
+
+.main-button:active {
+
+  transform: scale(0.97);
+}
+
+
+/* =========================
+   クイズ
+========================= */
+
+.question-number {
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 13px;
+
+  letter-spacing: 2px;
+
+  color: #9b8062;
+
+  margin-bottom: 12px;
+}
+
+
+.progress {
+
+  width: 100%;
+
+  height: 4px;
+
+  background: #e3ddd4;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  margin-bottom: 34px;
+}
+
+
+.progress-bar {
+
+  height: 100%;
+
+  background: #b78d75;
+
+  transition:
+    width
+    0.4s
+    ease;
+}
+
+
+.question {
+
+  font-size: 19px;
+
+  font-weight: 600;
+
+  line-height: 1.8;
+
+  margin-bottom: 28px;
+
+  padding:
+    0
+    4px;
+}
+
+
+.choices {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+
+.choice-button {
+
+  width: 100%;
+
+  padding:
+    15px
+    17px;
+
+  border:
+    1px solid
+    #d8cec1;
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.6
+    );
+
+  color: #4a443c;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+
+.choice-button:active {
+
+  transform: scale(0.98);
+
+  background: #eee4dc;
+}
+
+
+/* =========================
+   送信中
+========================= */
+
+.sending {
+
+  font-size: 14px;
+
+  line-height: 2;
+
+  color: #777066;
+}
+
+
+/* =========================
+   スコア
+========================= */
+
+.score {
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 48px;
+
+  color: #735f49;
+
+  margin:
+    20px
+    0
+    25px;
+}
+
+
+/* =========================
+   メッセージ演出
+========================= */
+
+.fade-text {
+
+  opacity: 0;
+
+  transform:
+    translateY(18px);
+
+  transition:
+    opacity 2.8s ease,
+    transform 2.8s ease;
+}
+
+
+.fade-text.show {
+
+  opacity: 1;
+
+  transform:
+    translateY(0);
+}
+
+
+.final-intro {
+
+  font-family:
+    "Yu Mincho",
+    "Hiragino Mincho ProN",
+    serif;
+
+  font-size: 22px;
+
+  line-height: 2.2;
+
+  letter-spacing: 2px;
+}
+
+
+.message-name {
+
+  font-family:
+    "Yu Mincho",
+    "Hiragino Mincho ProN",
+    serif;
+
+  font-size: 27px;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 32px;
+}
+
+
+.personal-message {
+
+  font-family:
+    "Yu Mincho",
+    "Hiragino Mincho ProN",
+    serif;
+
+  font-size: 16px;
+
+  line-height: 2.3;
+
+  letter-spacing: 0.5px;
+
+  white-space: pre-wrap;
+
+  text-align: left;
+
+  padding:
+    0
+    8px;
+}
+
+
+.signature {
+
+  font-family:
+    Georgia,
+    serif;
+
+  margin-top: 38px;
+
+  letter-spacing: 2px;
+
+  font-size: 13px;
+
+  color: #8c8174;
+}
+
+
+/* =========================
+   Loading / Error
+========================= */
+
+.loading,
+.error {
+
+  font-size: 14px;
+
+  line-height: 2;
+
+  color: #777066;
+}
+
+
+.error {
+
+  color: #8b6464;
+}
+
+
+/* =========================
+   Footer
+========================= */
+
+.footer {
+
+  position: absolute;
+
+  bottom: 24px;
+
+  left: 0;
+  right: 0;
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  color: #aaa096;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-  <!-- 読み込み -->
-  <div id="loadingScreen" class="screen active">
-    <div class="loading">Loading...</div>
-  </div>
 
-  <!-- エラー -->
-  <div id="errorScreen" class="screen">
-    <div id="errorText" class="error"></div>
-  </div>
+<!-- =========================
+     LOADING
+========================= -->
 
-  <!-- Welcome -->
-  <div id="welcomeScreen" class="screen">
+<div
+  id="loadingScreen"
+  class="screen active"
+>
 
-    <div class="small-title">YUKI & YUKIKO</div>
-    <div class="title">WEDDING QUIZ</div>
-    <div class="line"></div>
+  <div class="loading">
 
-    <div id="welcomeName" class="guest-name"></div>
-
-    <div class="welcome">
-      今日は来てくれて<br>
-      ありがとうございます
-    </div>
-
-    <div class="sub-text">
-      ふたりにまつわる<br>
-      クイズに挑戦！
-    </div>
-
-    <button class="main-button" onclick="startQuiz()">
-      START
-    </button>
+    Loading...
 
   </div>
-
-  <!-- Quiz -->
-  <div id="quizScreen" class="screen">
-
-    <div id="questionNumber" class="question-number"></div>
-
-    <div class="progress">
-      <div id="progressBar" class="progress-bar"></div>
-    </div>
-
-    <div id="questionText" class="question"></div>
-
-    <div id="choices" class="choices"></div>
-
-  </div>
-
-  <!-- Score -->
-  <div id="scoreScreen" class="screen">
-
-    <div class="small-title">THANK YOU</div>
-
-    <div class="welcome">
-      回答ありがとうございました！
-    </div>
-
-    <div class="sub-text" style="margin-bottom:10px;">
-      あなたの結果は…
-    </div>
-
-    <div id="scoreText" class="score"></div>
-
-    <div class="sub-text">
-      クイズの結果は<br>
-      披露宴でもお楽しみに！
-    </div>
-
-  </div>
-
-  <!-- 最後に… -->
-  <div id="introScreen" class="screen">
-
-    <div id="finalIntro" class="final-intro fade-text">
-      最後に、<br>
-      ふたりからあなたへ。
-    </div>
-
-  </div>
-
-  <!-- Message -->
-  <div id="messageScreen" class="screen">
-
-    <div id="messageContent" class="fade-text">
-
-      <div id="messageName" class="message-name"></div>
-
-      <div id="personalMessage" class="personal-message"></div>
-
-      <div class="signature">
-        YUKI & YUKIKO
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="footer">2026.08.09</div>
 
 </div>
 
+
+<!-- =========================
+     ERROR
+========================= -->
+
+<div
+  id="errorScreen"
+  class="screen"
+>
+
+  <div
+    id="errorText"
+    class="error"
+  ></div>
+
+</div>
+
+
+<!-- =========================
+     WELCOME
+========================= -->
+
+<div
+  id="welcomeScreen"
+  class="screen"
+>
+
+  <div class="small-title">
+
+    YUKI & YUKIKO
+
+  </div>
+
+  <div class="title">
+
+    WEDDING QUIZ
+
+  </div>
+
+  <div class="line"></div>
+
+
+  <div
+    id="welcomeName"
+    class="guest-name"
+  ></div>
+
+
+  <div class="welcome">
+
+    本日は私たちの結婚式に<br>
+
+    お越しいただき<br>
+
+    ありがとうございます
+
+  </div>
+
+
+  <div class="sub-text">
+
+    ふたりにまつわる<br>
+
+    クイズに挑戦！
+
+  </div>
+
+
+  <button
+    class="main-button"
+    onclick="startQuiz()"
+  >
+
+    START
+
+  </button>
+
+</div>
+
+
+<!-- =========================
+     QUIZ
+========================= -->
+
+<div
+  id="quizScreen"
+  class="screen"
+>
+
+  <div
+    id="questionNumber"
+    class="question-number"
+  ></div>
+
+
+  <div class="progress">
+
+    <div
+      id="progressBar"
+      class="progress-bar"
+    ></div>
+
+  </div>
+
+
+  <div
+    id="questionText"
+    class="question"
+  ></div>
+
+
+  <div
+    id="choices"
+    class="choices"
+  ></div>
+
+</div>
+
+
+<!-- =========================
+     SENDING
+========================= -->
+
+<div
+  id="sendingScreen"
+  class="screen"
+>
+
+  <div class="small-title">
+
+    THANK YOU
+
+  </div>
+
+  <div class="sending">
+
+    回答を送信しています…
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     SCORE
+========================= -->
+
+<div
+  id="scoreScreen"
+  class="screen"
+>
+
+  <div class="small-title">
+
+    THANK YOU
+
+  </div>
+
+
+  <div class="welcome">
+
+    回答ありがとうございました！
+
+  </div>
+
+
+  <div
+    class="sub-text"
+    style="margin-bottom:10px;"
+  >
+
+    あなたの結果は…
+
+  </div>
+
+
+  <div
+    id="scoreText"
+    class="score"
+  ></div>
+
+
+  <div class="sub-text">
+
+    クイズの結果は<br>
+
+    披露宴でもお楽しみに！
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     MESSAGE INTRO
+========================= -->
+
+<div
+  id="introScreen"
+  class="screen"
+>
+
+  <div
+    id="finalIntro"
+    class="final-intro fade-text"
+  >
+
+    最後に、<br>
+
+    ふたりからあなたへ。
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     PERSONAL MESSAGE
+========================= -->
+
+<div
+  id="messageScreen"
+  class="screen"
+>
+
+  <div
+    id="messageContent"
+    class="fade-text"
+  >
+
+
+    <div
+      id="messageName"
+      class="message-name"
+    ></div>
+
+
+    <div
+      id="personalMessage"
+      class="personal-message"
+    ></div>
+
+
+    <div class="signature">
+
+      YUKI & YUKIKO
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<div class="footer">
+
+  2026.08.09
+
+</div>
+
+
+</div>
+
+
 <script>
 
-  const GAS_URL =
-    "https://script.google.com/macros/s/AKfycbxrA-Wr9HPMuesssOCNxYN-PkvYZ-7g41MmFXZbKQvAJ69PU2VmlYfLq05WDmpDZoR5sA/exec";
 
-  const params = new URLSearchParams(window.location.search);
-  const guestId = params.get("id");
+// =====================================
+// GAS URL
+// =====================================
 
-  let guestData = null;
-  let currentQuestion = 0;
-  let score = 0;
+const GAS_URL =
+  "https://script.google.com/macros/s/AKfycbxrA-Wr9HPMuesssOCNxYN-PkvYZ-7g41MmFXZbKQvAJ69PU2VmlYfLq05WDmpDZoR5sA/exec";
 
-  // 仮クイズ
-  const questions = [
-    {
-      question: "新郎の出身地はどこ？",
-      choices: [
-        "福井県",
-        "滋賀県",
-        "兵庫県",
-        "京都府"
-      ],
-      correct: 2
-    },
-    {
-      question: "新郎新婦がプロポーズの日に訪れた場所は？",
-      choices: [
-        "USJ",
-        "東京ディズニーシー",
-        "沖縄",
-        "北海道"
-      ],
-      correct: 1
-    },
-    {
-      question: "新郎の趣味ではないものはどれ？",
-      choices: [
-        "キャンプ",
-        "スノーボード",
-        "DIY",
-        "サーフィン"
-      ],
-      correct: 3
-    },
-    {
-      question: "新婦が高校時代にしていたスポーツは？",
-      choices: [
-        "バレーボール",
-        "ソフトボール",
-        "バドミントン",
-        "テニス"
-      ],
-      correct: 1
-    },
-    {
-      question: "今日、ふたりが一番願っていることは？",
-      choices: [
-        "雨が降らないこと",
-        "料理が余らないこと",
-        "みんなに楽しんでもらうこと",
-        "新郎が噛まずに挨拶すること"
-      ],
-      correct: 2
-    }
-  ];
 
-  async function loadGuest() {
+// =====================================
+// URLパラメータ
+// =====================================
 
-    if (!guestId) {
-      showError(
-        "ゲスト情報を確認できませんでした。<br><br>" +
-        "エスコートカードのQRコードから<br>" +
-        "もう一度アクセスしてください。"
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const guestId =
+  params.get("id");
+
+
+// =====================================
+// 変数
+// =====================================
+
+let guestData = null;
+
+let currentQuestion = 0;
+
+let answers = [];
+
+
+// =====================================
+// クイズ
+// =====================================
+
+const questions = [
+
+
+  // Q1
+  {
+
+    question:
+      "ウエディングケーキにのっているフルーツはなんでしょうか。",
+
+    choices: [
+      "イチゴ",
+      "メロン",
+      "モモ",
+      "シャインマスカット",
+      "マンゴー"
+    ]
+
+  },
+
+
+  // Q2
+  {
+
+    question:
+      "お色直し後の新郎の蝶ネクタイの色は？",
+
+    choices: [
+      "赤",
+      "青",
+      "緑",
+      "黄",
+      "オレンジ"
+    ]
+
+  },
+
+
+  // Q3
+  {
+
+    question:
+      "お色直し後の新婦のドレスの色は？",
+
+    choices: [
+      "赤",
+      "黄",
+      "黒",
+      "紫",
+      "ピンク"
+    ]
+
+  },
+
+
+  // Q4
+  {
+
+    question:
+      "オリジナルカクテルの組み合わせは？",
+
+    choices: [
+      "パイナップルローズ",
+      "ピーチローズ",
+      "白ぶどうローズ",
+      "ライチローズ",
+      "アップルローズ"
+    ]
+
+  },
+
+
+  // Q5
+  {
+
+    question:
+      "乾杯後に流れる曲は？",
+
+    choices: [
+      "Cheers（Mrs. GREEN APPLE）",
+      "乾杯（長渕剛）",
+      "バンザイ（ウルフルズ）",
+      "I LOVE...（Official髭男dism）",
+      "Marry You（Bruno Mars）"
+    ]
+
+  }
+
+];
+
+
+// =====================================
+// 初期読み込み
+// =====================================
+
+async function loadGuest() {
+
+
+  if (!guestId) {
+
+    showError(
+
+      "ゲスト情報を確認できませんでした。<br><br>" +
+
+      "エスコートカードのQRコードから<br>" +
+
+      "もう一度アクセスしてください。"
+
+    );
+
+    return;
+  }
+
+
+  try {
+
+
+    const response =
+      await fetch(
+
+        GAS_URL +
+        "?id=" +
+        encodeURIComponent(guestId) +
+        "&t=" +
+        Date.now()
+
       );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "通信エラー"
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!data.success) {
+
+      showError(
+
+        "ゲスト情報を確認できませんでした。<br><br>" +
+
+        "エスコートカードをご確認ください。"
+
+      );
+
       return;
     }
 
-    try {
 
-      const response = await fetch(
-        GAS_URL + "?id=" + encodeURIComponent(guestId)
-      );
+    guestData = data;
 
-      const data = await response.json();
 
-      if (!data.success) {
-        showError("ゲスト情報を確認できませんでした。");
-        return;
-      }
+    // ---------------------------------
+    // 回答済みならメッセージだけ
+    // ---------------------------------
 
-      guestData = data;
+    if (data.answered === true) {
 
-      document.getElementById("welcomeName").textContent =
-        data.name + " さん";
+      showMessageOnly();
 
-      showScreen("welcomeScreen");
-
-    } catch (error) {
-
-      console.error(error);
-
-      showError(
-        "読み込み中にエラーが発生しました。<br><br>" +
-        "通信環境をご確認のうえ、<br>" +
-        "もう一度お試しください。"
-      );
+      return;
     }
+
+
+    // ---------------------------------
+    // 初回
+    // ---------------------------------
+
+    document
+      .getElementById(
+        "welcomeName"
+      )
+      .textContent =
+      data.name + " 様";
+
+
+    showScreen(
+      "welcomeScreen"
+    );
+
+
+  } catch (error) {
+
+
+    console.error(error);
+
+
+    showError(
+
+      "読み込み中にエラーが発生しました。<br><br>" +
+
+      "通信環境をご確認のうえ、<br>" +
+
+      "もう一度お試しください。"
+
+    );
+
   }
 
-  function showScreen(id) {
+}
 
-    document.querySelectorAll(".screen").forEach(screen => {
-      screen.classList.remove("active");
-    });
 
-    document.getElementById(id).classList.add("active");
-  }
+// =====================================
+// START
+// =====================================
 
-  function showError(message) {
+function startQuiz() {
 
-    document.getElementById("errorText").innerHTML = message;
 
-    showScreen("errorScreen");
-  }
+  currentQuestion = 0;
 
-  function startQuiz() {
+  answers = [];
 
-    currentQuestion = 0;
-    score = 0;
 
-    showScreen("quizScreen");
+  showScreen(
+    "quizScreen"
+  );
 
-    showQuestion();
-  }
 
-  function showQuestion() {
+  showQuestion();
 
-    const q = questions[currentQuestion];
+}
 
-    document.getElementById("questionNumber").textContent =
-      `QUESTION ${String(currentQuestion + 1).padStart(2, "0")} / ${String(questions.length).padStart(2, "0")}`;
 
-    document.getElementById("progressBar").style.width =
-      `${((currentQuestion + 1) / questions.length) * 100}%`;
+// =====================================
+// 問題表示
+// =====================================
 
-    document.getElementById("questionText").textContent =
-      q.question;
+function showQuestion() {
 
-    const choices = document.getElementById("choices");
 
-    choices.innerHTML = "";
+  const q =
+    questions[
+      currentQuestion
+    ];
 
-    q.choices.forEach((choice, index) => {
 
-      const button = document.createElement("button");
+  document
+    .getElementById(
+      "questionNumber"
+    )
+    .textContent =
 
-      button.className = "choice-button";
+    `QUESTION ${
+      String(
+        currentQuestion + 1
+      ).padStart(2, "0")
+    } / ${
+      String(
+        questions.length
+      ).padStart(2, "0")
+    }`;
 
-      const labels = ["A", "B", "C", "D"];
+
+  document
+    .getElementById(
+      "progressBar"
+    )
+    .style.width =
+
+    `${
+      (
+        (
+          currentQuestion + 1
+        ) /
+        questions.length
+      ) * 100
+    }%`;
+
+
+  document
+    .getElementById(
+      "questionText"
+    )
+    .textContent =
+    q.question;
+
+
+  const choices =
+    document
+      .getElementById(
+        "choices"
+      );
+
+
+  choices.innerHTML = "";
+
+
+  const labels = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ];
+
+
+  q.choices.forEach(
+    (
+      choice,
+      index
+    ) => {
+
+
+      const button =
+        document
+          .createElement(
+            "button"
+          );
+
+
+      button.className =
+        "choice-button";
+
 
       button.textContent =
-        `${labels[index]}. ${choice}`;
+        labels[index] +
+        ". " +
+        choice;
 
-      button.onclick = () => answerQuestion(index);
 
-      choices.appendChild(button);
-    });
+      button.onclick =
+        () =>
+          answerQuestion(
+            labels[index]
+          );
+
+
+      choices
+        .appendChild(
+          button
+        );
+
+    }
+  );
+
+}
+
+
+// =====================================
+// 回答
+// =====================================
+
+function answerQuestion(answer) {
+
+
+  answers.push(answer);
+
+
+  currentQuestion++;
+
+
+  if (
+    currentQuestion <
+    questions.length
+  ) {
+
+
+    showQuestion();
+
+
+  } else {
+
+
+    submitAnswers();
+
   }
 
-  function answerQuestion(selectedIndex) {
+}
 
-    const q = questions[currentQuestion];
 
-    if (selectedIndex === q.correct) {
-      score++;
+// =====================================
+// GASへ回答送信
+// =====================================
+
+async function submitAnswers() {
+
+
+  showScreen(
+    "sendingScreen"
+  );
+
+
+  try {
+
+
+    const response =
+      await fetch(
+        GAS_URL,
+        {
+
+          method: "POST",
+
+          body:
+            JSON.stringify({
+
+              id:
+                guestData.id,
+
+              answers:
+                answers
+
+            })
+
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "回答の送信に失敗しました"
+      );
+
     }
 
-    currentQuestion++;
 
-    if (currentQuestion < questions.length) {
+    const result =
+      await response.json();
 
-      showQuestion();
 
-    } else {
+    // ---------------------------------
+    // 別端末などですでに回答済み
+    // ---------------------------------
 
-      showResult();
+    if (
+      result.alreadyAnswered
+    ) {
+
+
+      showMessageOnly();
+
+      return;
     }
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message ||
+        "回答の保存に失敗しました"
+      );
+
+    }
+
+
+    // GAS側で計算した点数
+    showResult(
+      result.score
+    );
+
+
+  } catch (error) {
+
+
+    console.error(error);
+
+
+    showError(
+
+      "回答を送信できませんでした。<br><br>" +
+
+      "通信環境をご確認のうえ、<br>" +
+
+      "もう一度QRコードからアクセスしてください。"
+
+    );
+
   }
 
-  function showResult() {
+}
 
-    showScreen("scoreScreen");
 
-    document.getElementById("scoreText").textContent =
-      `${score} / ${questions.length}`;
+// =====================================
+// スコア表示
+// =====================================
 
-    setTimeout(() => {
+function showResult(score) {
 
-      showScreen("introScreen");
 
-      setTimeout(() => {
-        document.getElementById("finalIntro")
-          .classList.add("show");
-      }, 200);
+  document
+    .getElementById(
+      "scoreText"
+    )
+    .textContent =
 
-    }, 3000);
+    score +
+    " / " +
+    questions.length;
 
-    setTimeout(() => {
 
-      document.getElementById("finalIntro")
-        .classList.remove("show");
+  showScreen(
+    "scoreScreen"
+  );
 
-      showScreen("messageScreen");
 
-      document.getElementById("messageName").textContent =
-        guestData.name + " へ";
+  // 3秒後
+  setTimeout(
+    () => {
 
-      document.getElementById("personalMessage").textContent =
-        guestData.message;
 
-      setTimeout(() => {
+      showScreen(
+        "introScreen"
+      );
 
-        document.getElementById("messageContent")
-          .classList.add("show");
 
-      }, 300);
+      setTimeout(
+        () => {
 
-    }, 7000);
-  }
 
-  loadGuest();
+          document
+            .getElementById(
+              "finalIntro"
+            )
+            .classList
+            .add(
+              "show"
+            );
+
+
+        },
+        150
+      );
+
+
+    },
+    3000
+  );
+
+
+  // 7秒後
+  setTimeout(
+    () => {
+
+
+      document
+        .getElementById(
+          "finalIntro"
+        )
+        .classList
+        .remove(
+          "show"
+        );
+
+
+      showPersonalMessage();
+
+
+    },
+    7500
+  );
+
+}
+
+
+// =====================================
+// 個別メッセージ
+// =====================================
+
+function showPersonalMessage() {
+
+
+  showScreen(
+    "messageScreen"
+  );
+
+
+  const nickname =
+    guestData.nickname ||
+    guestData.name;
+
+
+  document
+    .getElementById(
+      "messageName"
+    )
+    .textContent =
+    nickname + "へ";
+
+
+  document
+    .getElementById(
+      "personalMessage"
+    )
+    .textContent =
+    guestData.message;
+
+
+  const content =
+    document
+      .getElementById(
+        "messageContent"
+      );
+
+
+  content
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  setTimeout(
+    () => {
+
+
+      content
+        .classList
+        .add(
+          "show"
+        );
+
+
+    },
+    200
+  );
+
+}
+
+
+// =====================================
+// 2回目以降
+// メッセージだけ
+// =====================================
+
+function showMessageOnly() {
+
+
+  document
+    .getElementById(
+      "messageName"
+    )
+    .textContent =
+
+    (
+      guestData.nickname ||
+      guestData.name
+    ) +
+    "へ";
+
+
+  document
+    .getElementById(
+      "personalMessage"
+    )
+    .textContent =
+    guestData.message;
+
+
+  showScreen(
+    "messageScreen"
+  );
+
+
+  const content =
+    document
+      .getElementById(
+        "messageContent"
+      );
+
+
+  content
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  setTimeout(
+    () => {
+
+
+      content
+        .classList
+        .add(
+          "show"
+        );
+
+
+    },
+    250
+  );
+
+}
+
+
+// =====================================
+// 画面切替
+// =====================================
+
+function showScreen(id) {
+
+
+  document
+    .querySelectorAll(
+      ".screen"
+    )
+    .forEach(
+      screen => {
+
+
+        screen
+          .classList
+          .remove(
+            "active"
+          );
+
+
+      }
+    );
+
+
+  document
+    .getElementById(id)
+    .classList
+    .add(
+      "active"
+    );
+
+}
+
+
+// =====================================
+// エラー
+// =====================================
+
+function showError(message) {
+
+
+  document
+    .getElementById(
+      "errorText"
+    )
+    .innerHTML =
+    message;
+
+
+  showScreen(
+    "errorScreen"
+  );
+
+}
+
+
+// =====================================
+// 起動
+// =====================================
+
+loadGuest();
+
 
 </script>
 
+
 </body>
+
 </html>
