@@ -1356,103 +1356,71 @@ const questions = [
 
 async function loadGuest() {
 
-
   if (!guestId) {
 
     showError(
-
       "ゲスト情報を確認できませんでした。<br><br>" +
-
       "エスコートカードのQRコードから<br>" +
-
       "もう一度アクセスしてください。"
-
     );
 
     return;
   }
 
-
   try {
 
-
-    const response =
-      await fetch(
-
-        GAS_URL +
-        "?id=" +
-        encodeURIComponent(guestId) +
-        "&t=" +
-        Date.now()
-
-      );
-
+    const response = await fetch(
+      GAS_URL +
+      "?id=" +
+      encodeURIComponent(guestId) +
+      "&t=" +
+      Date.now()
+    );
 
     if (!response.ok) {
-
-      throw new Error(
-        "通信エラー"
-      );
-
+      throw new Error("通信エラー");
     }
 
-
-    const data =
-      await response.json();
-
+    const data = await response.json();
 
     if (!data.success) {
 
       showError(
-
         "ゲスト情報を確認できませんでした。<br><br>" +
-
         "エスコートカードをご確認ください。"
-
       );
 
       return;
     }
 
-
     guestData = data;
 
-
-    if (data.answered === true) {
+    // -----------------------
+    // 回答済みなら即メッセージ
+    // -----------------------
+    if (data.answered) {
 
       showMessageOnly();
-
       return;
+
     }
 
+    // -----------------------
+    // 初回のみWelcomeへ
+    // -----------------------
+    document.getElementById("welcomeName").textContent =
+      data.name + "　様";
 
-    document
-      .getElementById(
-        "welcomeName"
-      )
-      .textContent =
-      data.name + " 様";
-
-
-    showScreen(
-      "welcomeScreen"
-    );
-
+    showScreen("welcomeScreen");
 
   } catch (error) {
 
-
     console.error(error);
 
-
     showError(
-
       "読み込み中にエラーが発生しました。<br><br>" +
-
       "通信環境をご確認のうえ、<br>" +
-
       "もう一度お試しください。"
-
     );
 
   }
