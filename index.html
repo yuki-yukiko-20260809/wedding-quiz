@@ -7,7 +7,7 @@
 
 <meta
   name="viewport"
-  content="width=device-width, initial-scale=1.0"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
 <title>YUKI & YUKIKO WEDDING QUIZ</title>
@@ -227,6 +227,39 @@ body {
   color: #777066;
 
   margin-bottom: 40px;
+}
+
+
+/* =========================
+   クイズ開始前の説明
+========================= */
+
+.quiz-intro-text {
+
+  font-family:
+    "Yu Mincho",
+    "Hiragino Mincho ProN",
+    serif;
+
+  font-size: 17px;
+
+  line-height: 2;
+
+  letter-spacing: 1px;
+
+  color: #4a443c;
+
+  margin-bottom: 40px;
+}
+
+
+.quiz-intro-emphasis {
+
+  font-size: 20px;
+
+  color: #735f49;
+
+  letter-spacing: 1.5px;
 }
 
 
@@ -617,6 +650,22 @@ body {
   }
 
 
+  .quiz-intro-text {
+
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    margin-bottom: 26px;
+  }
+
+
+  .quiz-intro-emphasis {
+
+    font-size: 18px;
+  }
+
+
   .main-button {
 
     width: 200px;
@@ -713,6 +762,12 @@ body {
   }
 
 
+  .quiz-intro-text {
+
+    font-size: 15px;
+  }
+
+
   .question {
 
     font-size: 17px;
@@ -750,12 +805,12 @@ body {
     Loading...<br><br>
 
     現在 新郎新婦<br>
-    
-    人生最高の日を迎える準備中です!<br><br>
+
+    人生最高の日を迎える準備中です！<br><br>
 
     その間にクイズに挑戦して<br>
 
-    挙式までお待ちください!!<br><br>
+    挙式までお待ちください！<br><br>
 
     ※このページは自動的に切り替わります
 
@@ -825,9 +880,12 @@ body {
   <div class="sub-text">
 
     まずは最初のイベントとして<br>
-    クイズに挑戦してみてください!!<br><br> 
-    始まるまでに、忘れずに回答してくださいね！
-    <br>
+
+    クイズに挑戦してみてください！<br><br>
+
+    挙式が始まるまでに<br>
+
+    忘れずに回答してくださいね！
 
   </div>
 
@@ -838,6 +896,65 @@ body {
   >
 
     START
+
+  </button>
+
+</div>
+
+
+<!-- =========================
+     QUIZ INTRO
+========================= -->
+
+<div
+  id="quizIntroScreen"
+  class="screen"
+>
+
+  <div class="small-title">
+
+    BEFORE START
+
+  </div>
+
+
+  <div class="title">
+
+    QUIZ RULES
+
+  </div>
+
+
+  <div class="line"></div>
+
+
+  <div class="quiz-intro-text">
+
+    <span class="quiz-intro-emphasis">
+
+      クイズは全部で5問！
+
+    </span>
+
+    <br><br>
+
+    一度回答すると<br>
+
+    修正はできません。<br><br>
+
+    ということで、<br>
+
+    真剣によろしくお願いします！
+
+  </div>
+
+
+  <button
+    class="main-button"
+    onclick="beginQuiz()"
+  >
+
+    LET'S START
 
   </button>
 
@@ -897,6 +1014,7 @@ body {
     THANK YOU
 
   </div>
+
 
   <div class="sending">
 
@@ -994,7 +1112,6 @@ body {
     class="fade-text"
   >
 
-
     <div
       id="messageName"
       class="message-name"
@@ -1013,12 +1130,11 @@ body {
 
     </div>
 
-
   </div>
 
 </div>
 
-  
+
 </div>
 
 
@@ -1042,6 +1158,7 @@ const params =
     window.location.search
   );
 
+
 const guestId =
   params.get("id");
 
@@ -1055,6 +1172,8 @@ let guestData = null;
 let currentQuestion = 0;
 
 let answers = [];
+
+let isAnswering = false;
 
 
 // =====================================
@@ -1271,14 +1390,31 @@ async function loadGuest() {
 
 // =====================================
 // START
+// 注意画面を表示
 // =====================================
 
 function startQuiz() {
 
 
+  showScreen(
+    "quizIntroScreen"
+  );
+
+}
+
+
+// =====================================
+// クイズ開始
+// =====================================
+
+function beginQuiz() {
+
+
   currentQuestion = 0;
 
   answers = [];
+
+  isAnswering = false;
 
 
   showScreen(
@@ -1413,6 +1549,14 @@ function showQuestion() {
 function answerQuestion(answer) {
 
 
+  if (isAnswering) {
+    return;
+  }
+
+
+  isAnswering = true;
+
+
   answers.push(answer);
 
 
@@ -1426,6 +1570,8 @@ function answerQuestion(answer) {
 
 
     showQuestion();
+
+    isAnswering = false;
 
 
   } else {
