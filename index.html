@@ -483,6 +483,37 @@ body {
 }
 
 
+.loading-title {
+
+  font-family:
+    "Yu Mincho",
+    "Hiragino Mincho ProN",
+    serif;
+
+  font-size: 18px;
+
+  line-height: 2.1;
+
+  letter-spacing: 1px;
+
+  color: #4a443c;
+
+  margin-bottom: 22px;
+}
+
+
+.loading-sub {
+
+  font-size: 14px;
+
+  line-height: 2;
+
+  letter-spacing: 0.5px;
+
+  color: #777066;
+}
+
+
 .error {
 
   color: #8b6464;
@@ -533,9 +564,19 @@ body {
   class="screen active"
 >
 
-  <div class="loading">
+  <div class="small-title">
 
-    Loading...
+    YUKI & YUKIKO
+
+  </div>
+
+  <div
+    id="loadingText"
+    class="loading"
+  >
+
+    読み込み中です…<br>
+    もう少しだけお待ちください。
 
   </div>
 
@@ -1016,7 +1057,16 @@ async function loadGuest() {
 
 
     // ---------------------------------
-    // 初回
+    // 新郎側・新婦側でLoadingを切替
+    // ---------------------------------
+
+    setSideLoadingMessage(
+      data.side
+    );
+
+
+    // ---------------------------------
+    // 名前を設定
     // ---------------------------------
 
     document
@@ -1027,8 +1077,20 @@ async function loadGuest() {
       data.name + " 様";
 
 
-    showScreen(
-      "welcomeScreen"
+    // ---------------------------------
+    // Loadingメッセージを表示してから
+    // Welcome画面へ移動
+    // ---------------------------------
+
+    setTimeout(
+      () => {
+
+        showScreen(
+          "welcomeScreen"
+        );
+
+      },
+      2800
     );
 
 
@@ -1047,6 +1109,92 @@ async function loadGuest() {
       "もう一度お試しください。"
 
     );
+
+  }
+
+}
+
+
+// =====================================
+// Loadingメッセージ切替
+// =====================================
+
+function setSideLoadingMessage(side) {
+
+
+  const loadingText =
+    document.getElementById(
+      "loadingText"
+    );
+
+
+  if (side === "新郎") {
+
+    loadingText.innerHTML =
+
+      '<div class="loading-title">' +
+
+      'ただいま、新郎が<br>' +
+
+      'ガチガチに緊張しながら<br>' +
+
+      '準備をしております…' +
+
+      '</div>' +
+
+      '<div class="loading-sub">' +
+
+      'その間に、ぜひクイズに挑戦して<br>' +
+
+      '挙式までお待ちください！' +
+
+      '</div>';
+
+
+  } else if (side === "新婦") {
+
+    loadingText.innerHTML =
+
+      '<div class="loading-title">' +
+
+      'ただいま、新婦が<br>' +
+
+      'ガチガチに緊張しながら<br>' +
+
+      '準備をしております…' +
+
+      '</div>' +
+
+      '<div class="loading-sub">' +
+
+      'その間に、ぜひクイズに挑戦して<br>' +
+
+      '挙式までお待ちください！' +
+
+      '</div>';
+
+
+  } else {
+
+    loadingText.innerHTML =
+
+      '<div class="loading-title">' +
+
+      'ただいま、ふたりが<br>' +
+
+      'ガチガチに緊張しながら<br>' +
+
+      '準備をしております…' +
+
+      '</div>' +
+
+      '<div class="loading-sub">' +
+
+      'その間に、ぜひクイズに挑戦して<br>' +
+
+      '挙式までお待ちください！' +
+
+      '</div>';
 
   }
 
@@ -1297,7 +1445,6 @@ async function submitAnswers() {
     }
 
 
-    // GAS側で計算した点数
     showResult(
       result.score
     );
@@ -1347,7 +1494,6 @@ function showResult(score) {
   );
 
 
-  // 3秒後
   setTimeout(
     () => {
 
@@ -1381,7 +1527,6 @@ function showResult(score) {
   );
 
 
-  // 7秒後
   setTimeout(
     () => {
 
