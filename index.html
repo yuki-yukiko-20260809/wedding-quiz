@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -358,11 +360,27 @@ body {
 
   line-height: 1.8;
 
-  margin-bottom: 28px;
+  margin-bottom: 12px;
 
   padding:
     0
     4px;
+}
+
+
+.question-note {
+
+  font-size: 13px;
+
+  line-height: 1.8;
+
+  color: #777066;
+
+  margin-bottom: 24px;
+
+  padding:
+    0
+    6px;
 }
 
 
@@ -692,7 +710,17 @@ body {
 
     line-height: 1.6;
 
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+  }
+
+
+  .question-note {
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    margin-bottom: 16px;
   }
 
 
@@ -812,7 +840,8 @@ body {
 
     挙式までお待ちください！<br><br>
 
-    ※このページは自動的に切り替わります
+    ※このページは自動的に切り替わります<br>
+    ※切り替わらなければ QRコードを再度読み込みください
 
   </div>
 
@@ -940,9 +969,9 @@ body {
 
     一度回答すると<br>
 
-    修正はできません。<br><br>
+    修正はできません<br><br>
 
-    ということで、<br>
+    ということで<br>
 
     真剣によろしくお願いします！
 
@@ -989,6 +1018,12 @@ body {
   <div
     id="questionText"
     class="question"
+  ></div>
+
+
+  <div
+    id="questionNote"
+    class="question-note"
   ></div>
 
 
@@ -1187,14 +1222,14 @@ const questions = [
   {
 
     question:
-      "ウエディングケーキにのっているフルーツはなんでしょうか。",
+      "ウエディングケーキにのっているフルーツはなんでしょうか",
 
     choices: [
-      "イチゴ",
       "メロン",
       "モモ",
       "シャインマスカット",
-      "マンゴー"
+      "イチゴ",
+      "パイナップル"
     ]
 
   },
@@ -1204,14 +1239,14 @@ const questions = [
   {
 
     question:
-      "お色直し後の新郎の蝶ネクタイの色は？",
+      "お色直し後の新郎の蝶ネクタイは何色でしょうか",
 
     choices: [
       "赤",
+      "黒",
       "青",
       "緑",
-      "黄",
-      "オレンジ"
+      "黄"
     ]
 
   },
@@ -1221,14 +1256,14 @@ const questions = [
   {
 
     question:
-      "お色直し後の新婦のドレスの色は？",
+      "お色直し後の新婦のドレスは何色でしょうか",
 
     choices: [
       "赤",
-      "黄",
       "黒",
-      "紫",
-      "ピンク"
+      "青",
+      "緑",
+      "黄"
     ]
 
   },
@@ -1238,14 +1273,17 @@ const questions = [
   {
 
     question:
-      "オリジナルカクテルの組み合わせは？",
+      "オリジナルカクテルの組み合わせはなんでしょうか",
+
+    note:
+      "ノンアルコールなので、披露宴が始まったら、ぜひ飲んでみてください",
 
     choices: [
-      "パイナップルローズ",
-      "ピーチローズ",
-      "白ぶどうローズ",
-      "ライチローズ",
-      "アップルローズ"
+      "パイナップル×ローズ",
+      "ピーチ×ローズ",
+      "白ぶどう×ローズ",
+      "ライチ×ローズ",
+      "アップル×ローズ"
     ]
 
   },
@@ -1255,14 +1293,14 @@ const questions = [
   {
 
     question:
-      "乾杯後に流れる曲は？",
+      "乾杯後に流れる曲はなんでしょうか",
 
     choices: [
-      "Cheers（Mrs. GREEN APPLE）",
       "乾杯（長渕剛）",
       "バンザイ（ウルフルズ）",
       "I LOVE...（Official髭男dism）",
-      "Marry You（Bruno Mars）"
+      "Marry You（Bruno Mars）",
+      "Cheers（Mrs. GREEN APPLE）"
     ]
 
   }
@@ -1338,10 +1376,6 @@ async function loadGuest() {
     guestData = data;
 
 
-    // ---------------------------------
-    // 回答済みならメッセージだけ
-    // ---------------------------------
-
     if (data.answered === true) {
 
       showMessageOnly();
@@ -1349,10 +1383,6 @@ async function loadGuest() {
       return;
     }
 
-
-    // ---------------------------------
-    // 初回
-    // ---------------------------------
 
     document
       .getElementById(
@@ -1390,7 +1420,6 @@ async function loadGuest() {
 
 // =====================================
 // START
-// 注意画面を表示
 // =====================================
 
 function startQuiz() {
@@ -1479,6 +1508,32 @@ function showQuestion() {
     )
     .textContent =
     q.question;
+
+
+  const questionNote =
+    document
+      .getElementById(
+        "questionNote"
+      );
+
+
+  if (q.note) {
+
+    questionNote.textContent =
+      q.note;
+
+    questionNote.style.display =
+      "block";
+
+  } else {
+
+    questionNote.textContent =
+      "";
+
+    questionNote.style.display =
+      "none";
+
+  }
 
 
   const choices =
@@ -1634,10 +1689,6 @@ async function submitAnswers() {
       await response.json();
 
 
-    // ---------------------------------
-    // 別端末などですでに回答済み
-    // ---------------------------------
-
     if (
       result.alreadyAnswered
     ) {
@@ -1659,7 +1710,6 @@ async function submitAnswers() {
     }
 
 
-    // GAS側で計算した点数
     showResult(
       result.score
     );
@@ -1709,7 +1759,6 @@ function showResult(score) {
   );
 
 
-  // 3秒後
   setTimeout(
     () => {
 
@@ -1743,7 +1792,6 @@ function showResult(score) {
   );
 
 
-  // 7.5秒後
   setTimeout(
     () => {
 
@@ -1970,3 +2018,8 @@ loadGuest();
 </body>
 
 </html>
+'''
+
+path = Path("/mnt/data/wedding_quiz_updated_questions.html")
+path.write_text(html, encoding="utf-8")
+print(path)
