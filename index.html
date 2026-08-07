@@ -1101,16 +1101,12 @@ body {
 >
 
   <div class="small-title">
-
     THANK YOU
-
   </div>
 
 
   <div class="welcome">
-
     回答ありがとうございました！
-
   </div>
 
 
@@ -1118,9 +1114,7 @@ body {
     class="sub-text"
     style="margin-bottom:10px;"
   >
-
     クイズの結果は…
-
   </div>
 
 
@@ -1128,29 +1122,17 @@ body {
 
     披露宴にてお楽しみに！<br>
 
-    では チャペルでお会いしましょう！
+    では、チャペルでお会いしましょう！
 
   </div>
 
-</div>
-
-
-<!-- =========================
-     MESSAGE INTRO
-========================= -->
-
-<div
-  id="introScreen"
-  class="screen"
->
 
   <div
     id="finalIntro"
     class="final-intro fade-text"
+    style="margin-top:32px;"
   >
-
-    最後に、<br>
-
+    最後に...
   </div>
 
 </div>
@@ -1737,33 +1719,32 @@ function showResult() {
   );
 
 
-  // 3秒後にメッセージ紹介画面へ
+  const finalIntro =
+    document
+      .getElementById(
+        "finalIntro"
+      );
+
+
+  // 最初は「最後に...」を非表示
+  finalIntro
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  // 3秒後に RESULT画面のまま
+  // 「最後に...」を表示
   setTimeout(
     () => {
 
 
-      showScreen(
-        "introScreen"
-      );
-
-
-      setTimeout(
-        () => {
-
-
-          document
-            .getElementById(
-              "finalIntro"
-            )
-            .classList
-            .add(
-              "show"
-            );
-
-
-        },
-        150
-      );
+      finalIntro
+        .classList
+        .add(
+          "show"
+        );
 
 
     },
@@ -1771,15 +1752,12 @@ function showResult() {
   );
 
 
-  // 7.5秒後に個別メッセージへ
+  // 6.5秒後に個別メッセージへ
   setTimeout(
     () => {
 
 
-      document
-        .getElementById(
-          "finalIntro"
-        )
+      finalIntro
         .classList
         .remove(
           "show"
@@ -1790,7 +1768,7 @@ function showResult() {
 
 
     },
-    7500
+    6500
   );
 
 }
